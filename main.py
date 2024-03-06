@@ -64,6 +64,25 @@ def save():
             password_entry.delete(0, END)
 
 
+# ---------------------------- find PASSWORD ------------------------------- #
+def find_password():
+    website = website_entry.get()
+    try:
+        with open("data.json", "r") as data_file:
+            # Reading old data
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showwarning(title="Error", message="No Data File Found")
+    else:
+        if website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            messagebox.showinfo(title=website, message=f"Email: {email}\nPassword: {password}")
+            pyperclip.copy(password)
+        else:
+            messagebox.showwarning(title="Error", message=f"No details for the {website} website exists.")
+
+
 # ---------------------------- UI SETUP ------------------------------- #
 
 window = Tk()
@@ -79,8 +98,8 @@ password_label3 = Label(text="Password:", font=(FONT_NAME, 10, "bold"))
 password_label3.grid(column=0, row=3)
 
 # Entries
-website_entry = Entry(width=52)
-website_entry.grid(column=1, row=1, columnspan=2)
+website_entry = Entry(width=33)
+website_entry.grid(column=1, row=1)
 website_entry.focus()
 email_entry = Entry(width=52)
 email_entry.grid(column=1, row=2, columnspan=2)
@@ -93,6 +112,8 @@ generate_button = Button(text="Generate Password", command=generate_password)
 generate_button.grid(column=2, row=3)
 add_button = Button(width=44, text="Add", command=save)
 add_button.grid(column=1, row=4, columnspan=2)
+search_button = Button(text="Search", width=14, command=find_password)
+search_button.grid(column=2, row=1)
 
 canvas = Canvas(width=200, height=200)
 lock_img = PhotoImage(file="logo.png")
